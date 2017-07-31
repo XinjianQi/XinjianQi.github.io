@@ -1,5 +1,6 @@
 ---
 title: iOS note
+description: 自定义 UINavigationBar 和 UITabBar 的横线
 date: 2017-07-29 10:36:24
 tags:
 ---
@@ -21,7 +22,7 @@ for (UITabBarItem *item in vc.tabBar.items) {
 
 * 设置图片
 
-> 一种是让美工给 @2x 和 @3x 的图片，具体效果让设计出；
+> 一种是让美工给 @2x 和 @3x 的图片，具体效果让设计出；
 一种是通过纯色图片；
 但前提是必须设置 UINvigationBar 的 backgroundImage 后，setShadowImage才会起作用。
 代码如下：
@@ -104,7 +105,7 @@ lineView.alpha = 0;
 
 ### UITabBar 
 > 更改 UITabBar 上方的横线可以采用与 UINavigationBar 同样的方式解决；
-如果采用 setShadowImage 方法，必须先 setBackgroundImage，二者缺一不可。
+如果采用 setShadowImage 方法，必须先 setBackgroundImage，二者缺一不可。
 
 ```
 [self.tabBar setShadowImage:img];
