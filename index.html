@@ -323,50 +323,14 @@
 
       
         
-          
-            <h3 id="UITabBarItem"><a href="#UITabBarItem" class="headerlink" title="UITabBarItem"></a>UITabBarItem</h3><blockquote>
-<p>在使用UITabBar时，默认的UITabBarItem显示title和icon的距离有些大，title会太靠近屏幕底部边缘；我们可以通过修改UITabBarItem的属性，来调整title和icon的间距，当然也可以改变title和icon的上下位置。 </p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">for (UITabBarItem *item in vc.tabBar.items) &#123;</div><div class="line">  item.titlePositionAdjustment = UIOffsetMake(0, -2);</div><div class="line">  item.imageInsets = UIEdgeInsetsMake(-2, 0, 2, 0);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="UINavigationBar"><a href="#UINavigationBar" class="headerlink" title="UINavigationBar"></a>UINavigationBar</h3><blockquote>
-<p>系统的UINavigationBar底部会有一条横线，颜色较深，很多时候与我们的设计不搭，我们可以通过几种方法来解决。</p>
-</blockquote>
-<ul>
-<li>设置图片</li>
-</ul>
-<blockquote>
-<p>一种是让美工给 @2x 和 @3x 的图片，具体效果让设计出；<br>一种是通过纯色图片；<br>但前提是必须设置 UINvigationBar 的 backgroundImage 后，setShadowImage才会起作用。<br>代码如下：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[UINavigationBar appearance] setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] forBarMetrics:UIBarMetricsDefault];</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 设计图</div><div class="line">[[UINavigationBar appearance] setShadowImage:[UIImage imageNamed:@&quot;line_img&quot;]];</div></pre></td></tr></table></figure>
-<p>or<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 纯色</div><div class="line">[[UINavigationBar appearance] setShadowImage:[UIImage imageWithColor:[UIColor redColor]]];</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>ps: 上面提到了 imageWithColor 方法，可以通过 UIImage 的 Category 方法添加，代码如下：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">/** 根据颜色生成纯色图片 **/</div><div class="line">+ (UIImage *)imageWithColor:(UIColor *)color</div><div class="line">&#123;</div><div class="line">    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);</div><div class="line">    UIGraphicsBeginImageContext(rect.size);</div><div class="line">    CGContextRef context = UIGraphicsGetCurrentContext();</div><div class="line">    </div><div class="line">    CGContextSetFillColorWithColor(context, [color CGColor]);</div><div class="line">    CGContextFillRect(context, rect);</div><div class="line">    </div><div class="line">    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();</div><div class="line">    UIGraphicsEndImageContext();</div><div class="line">    </div><div class="line">    return image;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>修改透明度</li>
-</ul>
-<blockquote>
-<p>首先要获取到 UINavigationBar 的底部横线；</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#pragma mark - 返回 UINavigationBar 下方的黑色横线</div><div class="line">- (UIImageView *)findBottomlineImageView:(UIView *)view</div><div class="line">&#123;</div><div class="line">    if ([view isKindOfClass:UIImageView.class] &amp;&amp; view.bounds.size.height &lt;= 1.0) &#123;</div><div class="line">        return (UIImageView *)view;</div><div class="line">    &#125;</div><div class="line">    for (UIView *subview in view.subviews) &#123;</div><div class="line">        UIImageView *imageView = [self findHairlineImageViewUnder:subview];</div><div class="line">        if (imageView) &#123;</div><div class="line">            return imageView;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>然后设置 alpha 值。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UIImageView *lineView = [self findBottomlineImageView:self.navigationBar];</div><div class="line">lineView.alpha = 0.3;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>可以发现，通过以上几种方式都可以隐藏 UINavigationBar 下方的横线。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[UINavigationBar appearance] setShadowImage:[UIImage imageWithColor:[UIColor clearColor]]];</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[UINavigationBar appearance] setShadowImage:[UIImage new]];</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UIImageView *lineView = [self findBottomlineImageView:self.navigationBar];</div><div class="line">lineView.alpha = 0;</div><div class="line">// lineView.hidden = YES;</div></pre></td></tr></table></figure>
-<h3 id="UITabBar"><a href="#UITabBar" class="headerlink" title="UITabBar"></a>UITabBar</h3><blockquote>
-<p>更改 UITabBar 上方的横线可以采用与 UINavigationBar 同样的方式解决；<br>如果采用 setShadowImage 方法，必须先 setBackgroundImage，二者缺一不可。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[self.tabBar setShadowImage:img];</div><div class="line">[self.tabBar setBackgroundImage:[UIImage new]];</div></pre></td></tr></table></figure>
-
-          
+          自定义 UINavigationBar 和 UITabBar 的横线
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/07/29/iOS_note/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
